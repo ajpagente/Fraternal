@@ -135,8 +135,10 @@ def main(directory):
 
     # Analyze the files inside the APK - START
     print("Files and their types >>>")
-    files_types = a.get_files_types()
-    print(files_types)
+    # files_types = a.get_files_types()
+    # print(files_types)
+    files = a.get_files()
+    print(files)
     # Analyze the files inside the APK - END
 
 # Reference: https://github.com/realpython/python-scripts/blob/master/scripts/10_find_files_recursively.py
