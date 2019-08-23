@@ -101,7 +101,6 @@ def main(directory):
 
     print("Certificates >>>")
     print(a.get_certificates())
-
     print("-----------------------------------------")
     print("Permissions >>>")
     permissions = a.get_permissions()
@@ -138,7 +137,7 @@ def main(directory):
     # files_types = a.get_files_types()
     # print(files_types)
     files = a.get_files()
-    print(files)
+    output_files(files)
     # Analyze the files inside the APK - END
 
 # Reference: https://github.com/realpython/python-scripts/blob/master/scripts/10_find_files_recursively.py
