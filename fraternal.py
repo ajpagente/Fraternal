@@ -1,6 +1,12 @@
 from androguard.misc import AnalyzeAPK
+from androguard.core.bytecodes import apk
+
 import os
+from asn1crypto import x509, keys
+from androguard.util import get_certificate_name_string
 import fnmatch
+import hashlib
+import binascii
 
 CURRENT_DIR = '../testApk/'
 PATTERN = '*.apk'
@@ -8,8 +14,10 @@ PATTERN = '*.apk'
 def main(directory):
     print("Inside main")
     apks = get_apk_files(directory, PATTERN)
-    a, d, dx = AnalyzeAPK(os.path.join(CURRENT_DIR, apks[0]))
+    # a, d, dx = AnalyzeAPK(os.path.join(CURRENT_DIR, apks[0]))
 
+    a = apk.APK(os.path.join(CURRENT_DIR, apks[0]))
+    
     print("App name >>>")
     print(a.get_app_name())
 
@@ -95,12 +103,49 @@ def main(directory):
             count+=1
     print(count)
     print("-----------------------------------------")
+    print("Certificates >>>")
     print("Is signed v1: {}".format(a.is_signed_v1()))
     print("Is signed v2: {}".format(a.is_signed_v2()))
     print("Is signed v3: {}".format(a.is_signed_v3()))
+    print()
 
-    print("Certificates >>>")
-    print(a.get_certificates())
+    certs = set(a.get_certificates_der_v3() + a.get_certificates_der_v2() + [a.get_certificate_der(x) for x in a.get_signature_names()])
+    pkeys = set(a.get_public_keys_der_v3() + a.get_public_keys_der_v2())
+
+    for cert in certs:           
+        x509_cert = x509.Certificate.load(cert)
+        print("Issuer:", get_certificate_name_string(x509_cert.issuer, short=True))
+        print("Subject:", get_certificate_name_string(x509_cert.subject, short=True))
+        print("Serial Number:", hex(x509_cert.serial_number))
+        print("Hash Algorithm:", x509_cert.hash_algo)
+        print("Signature Algorithm:", x509_cert.signature_algo)
+        print("Valid not before:", x509_cert['tbs_certificate']['validity']['not_before'].native)
+        print("Valid not after:", x509_cert['tbs_certificate']['validity']['not_after'].native)
+    
+    print()
+
+    hashfunctions = dict(md5=hashlib.md5,
+                         sha1=hashlib.sha1,
+                         sha256=hashlib.sha256,
+                         sha512=hashlib.sha512,
+                         )
+
+    for k, v in hashfunctions.items():
+        print("{} {}".format(k, v(cert).hexdigest()))
+
+    print()
+
+    for public_key in pkeys:
+        x509_public_key = keys.PublicKeyInfo.load(public_key)
+        print("PublicKey Algorithm:", x509_public_key.algorithm)
+        print("Bit Size:", x509_public_key.bit_size)
+        print("Fingerprint:", binascii.hexlify(x509_public_key.fingerprint))
+        try:
+            print("Hash Algorithm:", x509_public_key.hash_algo)
+        except ValueError as ve:
+            # RSA pkey does not have an hash algorithm
+            pass
+
     print("-----------------------------------------")
     print("Permissions >>>")
     permissions = a.get_permissions()
@@ -134,10 +179,14 @@ def main(directory):
 
     # Analyze the files inside the APK - START
     print("Files and their types >>>")
-    # files_types = a.get_files_types()
-    # print(files_types)
-    files = a.get_files()
-    output_files(files)
+    try:
+        files_types = a.get_files_types()
+        print(files_types)
+    except:
+        print("Exception in getting files + types, listing files instead...")
+        files = a.get_files()
+        output_files(files)
+    
     # Analyze the files inside the APK - END
 
 # Reference: https://github.com/realpython/python-scripts/blob/master/scripts/10_find_files_recursively.py
