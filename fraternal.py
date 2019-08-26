@@ -74,34 +74,25 @@ def main(directory):
     print("-----------------------------------------")
     print("Exported >>>")
     print("Activity >>>>>>>")
-    exported = a.get_all_attribute_value("activity", "exported", format_value=False)
-    # print(type(exported))
-    count = 0
+    exported = a.get_all_attribute_value("activity", "name", format_value=False, exported="true")
     for export in exported:
-        if export=="true":
-            count+=1
-    print(count)
+        print(export)
+
     print("Provider >>>>>>>")
-    exported = a.get_all_attribute_value("provider", "exported", format_value=False)
-    count = 0
+    exported = a.get_all_attribute_value("provider", "name", format_value=False, exported="true")
     for export in exported:
-        if export=="true":
-            count+=1
-    print(count)
+        print(export)
+
     print("Receiver >>>>>>>")
-    exported = a.get_all_attribute_value("receiver", "exported", format_value=False)
-    count = 0
+    exported = a.get_all_attribute_value("receiver", "name", format_value=False, exported="true")
     for export in exported:
-        if export=="true":
-            count+=1
-    print(count)
+        print(export)
+
     print("Service >>>>>>>")
-    exported = a.get_all_attribute_value("service", "exported", format_value=False)
-    count = 0
+    exported = a.get_all_attribute_value("service", "name", format_value=False, exported="true")
     for export in exported:
-        if export=="true":
-            count+=1
-    print(count)
+        print(export)
+
     print("-----------------------------------------")
     print("Certificates >>>")
     print("Is signed v1: {}".format(a.is_signed_v1()))
@@ -160,7 +151,10 @@ def main(directory):
     print("Activities >>> ")
     activities = a.get_activities()
     activities.sort()
-    output_files(activities)
+    for activity in activities:
+        print(activity)
+        intents = a.get_intent_filters('activity', activity)
+        print(intents)
 
     print("Providers >>>")
     providers = a.get_providers()
@@ -170,12 +164,19 @@ def main(directory):
     print("Receivers >>>")
     receivers = a.get_receivers()
     receivers.sort()
-    output_files(receivers)
+    for receiver in receivers:
+        print(receiver)
+        intents = a.get_intent_filters('receiver', receiver)
+        print(intents)
 
     print("Services >>>")
     services = a.get_services()
     services.sort()
-    output_files(services)
+
+    for service in services:
+        print(service)
+        intents = a.get_intent_filters('service', service)
+        print(intents)
 
     # Analyze the files inside the APK - START
     print("Files and their types >>>")
