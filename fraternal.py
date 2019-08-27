@@ -15,7 +15,7 @@ def main(directory):
     apks = get_apk_files(directory, PATTERN)
     # a, d, dx = AnalyzeAPK(os.path.join(CURRENT_DIR, apks[0]))
 
-    a = apk.APK(os.path.join(CURRENT_DIR, apks[0]))
+    a = apk.APK(os.path.join(directory, apks[0]))
     
     print("App name >>>")
     print(a.get_app_name())
