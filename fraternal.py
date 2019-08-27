@@ -20,6 +20,9 @@ def main(directory):
     print("App name >>>")
     print(a.get_app_name())
 
+    print("App package >>>")
+    print(a.get_package())
+
     print("Android version code >>>")
     print(a.get_androidversion_code())
 
