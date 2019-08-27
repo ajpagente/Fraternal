@@ -182,7 +182,7 @@ def main(directory):
     print("Files and their types >>>")
     try:
         files_types = a.get_files_types()
-        print(files_types)
+        output_dict(files_types)
     except:
         print("Exception in getting files + types, listing files instead...")
         files = a.get_files()
@@ -210,6 +210,11 @@ def get_apk_files(filepath, pattern):
 def output_files(list_of_files):
     for filename in list_of_files:
         print(filename)
+
+def output_dict(dictionary):
+    if isinstance(dictionary, dict):
+        for key, value in dictionary.items():
+            print("{}: {}".format(key, value))
 
 def is_apk(file):
     print("Check if file is an apk")
