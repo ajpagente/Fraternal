@@ -1,14 +1,13 @@
 from androguard.misc import AnalyzeAPK
 from androguard.core.bytecodes import apk
 
-import os
+import os, sys
 from asn1crypto import x509, keys
 from androguard.util import get_certificate_name_string
 import fnmatch
 import hashlib
 import binascii
 
-CURRENT_DIR = '../testApk/'
 PATTERN = '*.apk'
 
 def main(directory):
@@ -222,4 +221,7 @@ def is_apk(file):
 
 
 if __name__ == '__main__':
-    main(CURRENT_DIR)
+    if len(sys.argv) > 1:
+        main(sys.argv[1])
+    else:
+        print("You must specify the folder path.")
