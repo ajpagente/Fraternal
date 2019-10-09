@@ -49,7 +49,7 @@ class ShowCommand(Command):
         platform_build_ver_name = a.get_attribute_value("manifest", "platformBuildVersionName")
         
         data = []
-        data.append(['Filename', self.apkFile])
+        data.append(['File', self.apkFile])
         data.append(['App Name', appname])
         data.append(['Package', package])
         data.append(['Version Code', ver_code])
