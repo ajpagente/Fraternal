@@ -4,7 +4,7 @@ from display.display import display_permissions
 from androguard.core.bytecodes import apk
 from android.android import get_android_code
 from android.android import get_android_ver_num
-
+from android.signature import Signature
 
 class ShowCommand(Command):
 
@@ -17,6 +17,11 @@ class ShowCommand(Command):
             self.want_permission = False
         else:
             self.want_permission = True
+        
+        if args.sign is None:
+            self.show_signature = False
+        else:
+            self.show_signature = True
 
     def execute(self):
         
@@ -24,6 +29,8 @@ class ShowCommand(Command):
         
         if self.want_permission:
             self.display_permissions(a)
+        elif self.show_signature:
+            self.display_sign(a)
         else:
             self.display_basic(a)
 
@@ -60,6 +67,44 @@ class ShowCommand(Command):
         data.append(['Platform Build Version Code', platform_build_ver_code])
         data.append(['Platform Build Version Name', platform_build_ver_name])
         display_tabulated(data)    
+
+    # Display signing details
+    def display_sign(self, a):
+        signature = Signature(a)
+        data = []
+        data.append(['File', self.apkFile])
+        data.append(['Is v1 signed', signature.is_v1])
+        data.append(['Is v2 signed', signature.is_v2])
+        data.append(['Is v3 signed', signature.is_v3])
+        # display_tabulated(data)
+        # data.clear
+
+        certs = signature.certificates
+        cert_count = len(certs)
+        data.append(['', ''])
+        data.append(['Certificates', '{} found'.format(cert_count)])
+        for cert in certs:
+            data.append(['Issuer',cert.issuer])
+            data.append(['Subject',cert.subject])
+            data.append(['Serial Number',cert.serial_num])
+            data.append(['Hash Algorithm',cert.hash_algo])
+            data.append(['Signature Algorithm',cert.sign_algo])
+            data.append(['Valid not before',cert.valid_not_before])
+            data.append(['Valid not after',cert.valid_not_after])
+            hashes = cert.hashes
+            for _hash in hashes:
+                data.append(_hash)
+            data.append(['', ''])
+        public_keys = signature.public_keys
+        key_count = len(public_keys)
+        
+        data.append(['Public Keys', '{} found'.format(key_count)])
+        for key in public_keys:
+            data.append(['Algorithm', key.algo])
+            data.append(['Bit size', key.bit_size])
+            data.append(['Fingerprint', key.fingerprint])
+            data.append(['Hash Algorithm', key.hash_algo])
+        display_tabulated(data)
 
     def beautify_api_level(self, version):
         if version is None:

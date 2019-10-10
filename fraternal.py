@@ -27,7 +27,8 @@ def main():
     # create the parser for the "rec" command
     parser_show = subparsers.add_parser('show', help='Ouput apk info')
     parser_show.add_argument('-a', '--apk', help='the apk file to analyze')
-    parser_show.add_argument('-p', '--perm', help='the apk permissions')
+    parser_show.add_argument('-p', '--perm', help='show the apk permissions only')
+    parser_show.add_argument('-s', '--sign', help='show the apk signature details only')
     parser_show.add_argument('-v', '--verbose', help='display detailed information')
     parser_show.set_defaults(cmd=ShowCommand)
 
