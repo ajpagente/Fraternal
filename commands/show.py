@@ -76,14 +76,15 @@ class ShowCommand(Command):
         data.append(['Is v1 signed', signature.is_v1])
         data.append(['Is v2 signed', signature.is_v2])
         data.append(['Is v3 signed', signature.is_v3])
-        # display_tabulated(data)
-        # data.clear
 
         certs = signature.certificates
         cert_count = len(certs)
         data.append(['', ''])
-        data.append(['Certificates', '{} found'.format(cert_count)])
+        
+        count = 0
         for cert in certs:
+            count = count + 1
+            data.append(['Certificates', f'{count} of {cert_count}'])
             data.append(['Issuer',cert.issuer])
             data.append(['Subject',cert.subject])
             data.append(['Serial Number',cert.serial_num])
@@ -94,12 +95,15 @@ class ShowCommand(Command):
             hashes = cert.hashes
             for _hash in hashes:
                 data.append(_hash)
-            data.append(['', ''])
+            
+        data.append(['', ''])
         public_keys = signature.public_keys
         key_count = len(public_keys)
         
-        data.append(['Public Keys', '{} found'.format(key_count)])
+        count = 0
         for key in public_keys:
+            count = count + 1
+            data.append(['Public Keys', f'{count} of {key_count}'])
             data.append(['Algorithm', key.algo])
             data.append(['Bit size', key.bit_size])
             data.append(['Fingerprint', key.fingerprint])

@@ -62,17 +62,17 @@ class Certificate:
 class PublicKey:
     algo = None
     bit_size = None
-    fingerprint = None
+    fingerprint = None # A public key fingerprint is a short sequence of bytes used to identify a longer public key.
     hash_algo = None
 
     def __init__ (self, x509_public_key):
         self.algo = x509_public_key.algorithm
         self.bit_size = x509_public_key.bit_size
         self.fingerprint = binascii.hexlify(x509_public_key.fingerprint).decode('utf-8')
-        # try:
-        #     self.hash_algo = x509_public_key.hash_algo
-        # except ValueError:
-        #     # RSA pkey does not have an hash algorithm
-        #     pass
+        try:
+            self.hash_algo = x509_public_key.hash_algo
+        except (ValueError, AttributeError):
+            # RSA pkey does not have an hash algorithm
+            pass
 
         
