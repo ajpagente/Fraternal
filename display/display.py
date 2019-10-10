@@ -17,6 +17,8 @@ def display_permissions(permissions):
         split_perm = permission.split('.')
         short_perm = split_perm[-1]
         protection_level = get_permission_protection_level(short_perm)
+        if protection_level == 'Dangerous':
+            protection_level = format_warning(protection_level)
         added = get_permission_added(short_perm)
         deprecated = get_permission_deprecated(short_perm)
         formatted.append([permission,protection_level,added,deprecated])
@@ -26,6 +28,15 @@ def display_permissions(permissions):
 
 def format_field(field, color=Fore.BLUE):
     return color + field + Fore.RESET
+
+def format_warning(field, fore=Fore.WHITE, back=Back.RED):
+    return fore + back + field + Fore.RESET + Back.RESET
+
+def format_lookout(field, fore=Fore.WHITE, back=Back.BLUE):
+    return fore + back + field + Fore.RESET + Back.RESET
+
+def format_info(field, fore=Fore.WHITE, back=Back.GREEN):
+    return fore + back + field + Fore.RESET + Back.RESET
 
 def format_table(data):
     formatted = []
