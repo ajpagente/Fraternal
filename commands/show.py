@@ -5,31 +5,29 @@ from androguard.core.bytecodes import apk
 from android.android import get_android_code
 from android.android import get_android_ver_num
 from android.signature import Signature
+from android.apk import components
 
 class ShowCommand(Command):
 
     def __init__(self, args):
         Command.__init__(self, args)
         self.apkFile = args.apk
-        
-        if args.perm is None:
-            self.want_permission = False
-        else:
-            self.want_permission = True
-        
-        if args.sign is None:
-            self.show_signature = False
-        else:
-            self.show_signature = True
+        # print(type(args.perm))
+
+        self.show_permission = args.perm      
+        self.show_signature = args.sign
+        self.show_components = args.comp 
 
     def execute(self):
         
         a = apk.APK(self.apkFile)
         
-        if self.want_permission:
+        if self.show_permission:
             self.display_permissions(a)
         elif self.show_signature:
             self.display_sign(a)
+        elif self.show_components:
+            self.display_components(a)
         else:
             self.display_basic(a)
 
@@ -114,6 +112,20 @@ class ShowCommand(Command):
             data.append(['Fingerprint', key.fingerprint])
             data.append(['Hash Algorithm', key.hash_algo])
         display_tabulated(data)
+
+    def display_components(self, a):
+        data = []
+        comp = components.Components(a)
+        activities = comp.activities
+        data.append(['File', self.apkFile])
+        for activity in activities:
+            data.append(['Activity', activity.name])
+            data.append(['exported', activity.exported])
+            data.append(['permission', activity.permission])
+        display_tabulated(data)
+
+    def display_activities(self):
+        pass
 
     def beautify_api_level(self, version):
         if version is None:
