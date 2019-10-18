@@ -10,7 +10,6 @@ class ShowCommand(Command):
 
     def __init__(self, args):
         Command.__init__(self, args)
-        # print(args)
         self.apkFile = args.apk
         
         if args.perm is None:
@@ -73,10 +72,16 @@ class ShowCommand(Command):
         signature = Signature(a)
         data = []
         data.append(['File', self.apkFile])
-        data.append(['Is v1 signed', signature.is_v1])
-        data.append(['Is v2 signed', signature.is_v2])
-        data.append(['Is v3 signed', signature.is_v3])
-
+        
+        signing_version = ''
+        if signature.is_v1:
+            signing_version = 'v1 '
+        if signature.is_v2:
+            signing_version = signing_version + 'v2 '
+        if signature.is_v3:
+            signing_version = signing_version + 'v3'    
+        data.append(['Signing version', signing_version])
+        
         certs = signature.certificates
         cert_count = len(certs)
         data.append(['', ''])
