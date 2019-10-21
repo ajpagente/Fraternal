@@ -1,4 +1,5 @@
 from android.apk.activity import Activity
+from android.apk.intent_filter import IntentFilter
 
 class Components:
     def __init__(self, apk):
@@ -13,11 +14,23 @@ class Components:
         for activity_name in activities:
             permission = self._get_activity_attribute(activity_name, "permission")
             exported = self._get_activity_attribute(activity_name, "exported")
-            intent_filters = self.apk.get_intent_filters('activity', activity_name)
-            print(intent_filters)
-
             
-            self.activities.append(Activity(activity_name, permission, exported))
+            activity = Activity(activity_name, permission, exported)
+
+            intent_filters = self.apk.get_intent_filters('activity', activity_name)
+            # print(intent_filters)
+            if intent_filters:
+                actions = intent_filters['action']
+                categories = []
+                try: 
+                    categories = intent_filters['category']
+                except KeyError:
+                    pass
+
+                activity.intent_filters.append(IntentFilter(actions, categories))
+            
+            
+            self.activities.append(activity)
             
         return activities
 

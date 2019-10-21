@@ -1,8 +1,8 @@
 class IntentFilter:
-    def __init__(self, action, category=None):
+    def __init__(self, actions, categories=[]):
         """
             action - the value of the action attribute android:name
             category - the value of the category attribute android:name
         """
-        self.action = action
-        self.category = category
+        self.actions = actions
+        self.categories = categories

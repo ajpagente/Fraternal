@@ -6,8 +6,9 @@ from android.android import get_permission_added
 from android.android import get_permission_deprecated
 
 def display_tabulated(data):   
-    formatted = format_table(data)
-    table = SingleTable(formatted)
+    # formatted = format_table(data)
+    # table = SingleTable(formatted)
+    table = SingleTable(data)
     print(table.table)
 
 def display_permissions(permissions):

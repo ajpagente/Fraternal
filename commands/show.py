@@ -7,6 +7,10 @@ from android.android import get_android_ver_num
 from android.signature import Signature
 from android.apk import components
 
+"""
+General Rules:
+    - Fields with value = None is not shown
+"""
 class ShowCommand(Command):
 
     def __init__(self, args):
@@ -117,11 +121,26 @@ class ShowCommand(Command):
         data = []
         comp = components.Components(a)
         activities = comp.activities
-        data.append(['File', self.apkFile])
+        data.append(['Activity', 'File: ' + self.apkFile, ''])
         for activity in activities:
-            data.append(['Activity', activity.name])
-            data.append(['exported', activity.exported])
-            data.append(['permission', activity.permission])
+            data.append([activity.name, '', ''])
+            if activity.exported is not None:
+                data.append(['', 'exported', activity.exported])
+            if activity.permission is not None:
+                data.append(['', 'permission', activity.permission])
+            if activity.intent_filters:
+                sub_field = '- intent filter'
+                key = 'actions'
+                for action in activity.intent_filters[0].actions:
+                    data.append([sub_field, key, action])
+                    sub_field = ''
+                    key = ''
+                sub_field = '- intent filter'
+                key = 'categories'
+                for category in activity.intent_filters[0].categories:
+                    data.append([sub_field, key, category])
+                    sub_field = ''
+                    key = ''
         display_tabulated(data)
 
     def display_activities(self):
