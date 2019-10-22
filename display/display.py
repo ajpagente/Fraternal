@@ -5,27 +5,29 @@ from android.android import get_permission_protection_level
 from android.android import get_permission_added
 from android.android import get_permission_deprecated
 
+from display.tables import SimpleConsoleTable
+from display.format_specs import FormatSpecification
+from display.string_format import WarningFormatter
+
 def display_tabulated(data):   
     # formatted = format_table(data)
     # table = SingleTable(formatted)
     table = SingleTable(data)
     print(table.table)
 
-def display_permissions(permissions):
-    formatted = []
-    formatted.append(['Permissions', 'Protection Level', 'Added', 'Deprecated'])
+def display_permissions(permissions):   
+    fs = FormatSpecification('Protection Level', ['Dangerous'], WarningFormatter())
+    ct = SimpleConsoleTable(['Permissions', 'Protection Level', 'Added', 'Deprecated'], fs)
+
     for permission in permissions:
         split_perm = permission.split('.')
         short_perm = split_perm[-1]
         protection_level = get_permission_protection_level(short_perm)
-        if protection_level == 'Dangerous':
-            protection_level = format_warning(protection_level)
         added = get_permission_added(short_perm)
         deprecated = get_permission_deprecated(short_perm)
-        formatted.append([permission,protection_level,added,deprecated])
-    table = SingleTable(formatted)
-    print(table.table)
+        ct.add_row([permission,protection_level,added,deprecated])
 
+    print(ct.get_table().table)
 
 def format_field(field, color=Fore.BLUE):
     return color + field + Fore.RESET

@@ -58,3 +58,12 @@ class ConsoleStringFormatter(BaseStringFormatter):
 
     def _format_(self, string, fore=Fore.WHITE, back=Back.BLACK):
         return fore + back + string + Fore.RESET + Back.RESET
+
+class BaseConsoleStringFormatter(metaclass=ABCMeta):
+    @abstractmethod
+    def format(self, string):
+        pass
+
+class WarningFormatter(BaseConsoleStringFormatter):
+    def format(self, string):
+        return Fore.WHITE + Back.RED + string + Fore.RESET + Back.RESET
