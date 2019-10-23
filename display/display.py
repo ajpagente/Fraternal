@@ -6,7 +6,7 @@ from android.android import get_permission_added
 from android.android import get_permission_deprecated
 
 from display.tables import SimpleConsoleTable
-from display.format_specs import FormatSpecification
+from display.format_specs import RowFormatSpecification
 from display.string_format import WarningFormatter
 
 def display_tabulated(data):   
@@ -16,8 +16,9 @@ def display_tabulated(data):
     print(table.table)
 
 def display_permissions(permissions):   
-    fs = FormatSpecification('Protection Level', ['Dangerous'], WarningFormatter())
-    ct = SimpleConsoleTable(['Permissions', 'Protection Level', 'Added', 'Deprecated'], fs)
+    header = ['Permissions', 'Protection Level', 'Added', 'Deprecated']
+    fs = RowFormatSpecification(header, 'Protection Level', ['Dangerous'], WarningFormatter())
+    ct = SimpleConsoleTable(header, fs)
 
     for permission in permissions:
         split_perm = permission.split('.')
