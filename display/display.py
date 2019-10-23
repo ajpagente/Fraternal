@@ -27,7 +27,7 @@ def display_permissions(permissions):
         deprecated = get_permission_deprecated(short_perm)
         ct.add_row([permission,protection_level,added,deprecated])
 
-    print(ct.get_table().table)
+    print(ct.get_table())
 
 def format_field(field, color=Fore.BLUE):
     return color + field + Fore.RESET

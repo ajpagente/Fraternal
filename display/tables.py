@@ -1,13 +1,21 @@
 from terminaltables import SingleTable
+from display.string_format import HeaderFormatter
 
-class SimpleConsoleTable:
-    def __init__(self, header=[], format_specs=None):
-        self.header = header
+class BaseConsoleTable:
+    def _format_header_(self, header, formatter=HeaderFormatter()):
+        formatted = []
+        for item in header:
+            formatted.append(formatter.format(item))
+        return formatted
+
+class SimpleConsoleTable(BaseConsoleTable):
+    def __init__(self, header, format_specs=None):
+        self.header = self._format_header_(header)
         self.column_count = len(header)
         self.format_specs = format_specs
         self.column_num = self._column_num_(header, format_specs)
         self.rows = []
-        self.rows.append(header)
+        self.rows.append(self.header)
 
     def add_row(self, row=[]):
         if (len(row) > self.column_count):
@@ -22,15 +30,15 @@ class SimpleConsoleTable:
     def get_table(self):
         if not self.header:
             return None
-        return SingleTable(self.rows)
+        return SingleTable(self.rows).table
 
     def _format_row_(self, row):
         if not self.column_num:
             return row
         if (row[self.column_num] == self.format_specs.value[0]):
-            formatted_row = row
-            formatted_row[self.column_num] = self.format_specs.formatter.format(formatted_row[self.column_num])
-            return formatted_row
+            formatted = row
+            formatted[self.column_num] = self.format_specs.formatter.format(formatted[self.column_num])
+            return formatted
         else:
             return row
 

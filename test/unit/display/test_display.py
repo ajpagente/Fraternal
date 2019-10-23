@@ -10,8 +10,7 @@ class TestSimpleConsoleTable(unittest.TestCase):
         header = ['One', 'Two', 'Three', 'Four']
         fs = FormatSpecification('Protection Level', ['Dangerous'], WarningFormatter())
         ct = SimpleConsoleTable(header, fs)
-        table = ct.get_table()
-        actual = table.table
+        actual = ct.get_table()
         self.assertIsNotNone(actual)
         self.assertEqual(ct.column_count, 4)
         self.assertEqual(len(ct.rows), 1)
@@ -22,8 +21,7 @@ class TestSimpleConsoleTable(unittest.TestCase):
         header = ['One', 'Two', 'Three', 'Four']
         fs = FormatSpecification('Four', ['Dangerous'], WarningFormatter())
         ct = SimpleConsoleTable(header, fs)
-        table = ct.get_table()
-        actual = table.table
+        actual = ct.get_table()
         self.assertIsNotNone(actual)
         self.assertEqual(ct.column_count, 4)
         self.assertEqual(len(ct.rows), 1)
@@ -35,8 +33,7 @@ class TestSimpleConsoleTable(unittest.TestCase):
         ct.add_row(['a','b'])
         self.assertEqual(len(ct.rows), 2)
 
-        table = ct.get_table()
-        actual = table.table
+        actual = ct.get_table()
         self.assertIsNotNone(actual)
         actual = ct.rows[1]
         expected = ['a', 'b', '', '']
@@ -53,8 +50,7 @@ class TestSimpleConsoleTable(unittest.TestCase):
         self.assertEqual(len(ct.rows), 1)
         self.assertIsNone(ct.column_num)
 
-        table = ct.get_table()
-        actual = table.table
+        actual = ct.get_table()
         self.assertIsNotNone(actual)
 
     def test_add_exact_len_row(self):
@@ -62,8 +58,7 @@ class TestSimpleConsoleTable(unittest.TestCase):
         ct = SimpleConsoleTable(header)
         ct.add_row(['a','b','c','d'])
         self.assertEqual(len(ct.rows), 2)
-        table = ct.get_table()
-        actual = table.table
+        actual = ct.get_table()
         self.assertIsNotNone(actual)
         actual = ct.rows[1]
         expected = ['a', 'b', 'c', 'd']
@@ -77,13 +72,11 @@ class TestSimpleConsoleTable(unittest.TestCase):
         fs = FormatSpecification('Three', ['c'], WarningFormatter())
         ct = SimpleConsoleTable(header, fs)
         ct.add_row(['a','b','c','d'])
-        table = ct.get_table()
-        actual = table.table
+        actual = ct.get_table()
         self.assertIsNotNone(actual)
         self.assertEqual(ct.column_count, 4)
         self.assertEqual(len(ct.rows), 2)
         self.assertEqual(ct.column_num, 2)
-        print(actual)
 
 if __name__ == '__main__':
     unittest.main()

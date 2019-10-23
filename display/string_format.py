@@ -67,3 +67,7 @@ class BaseConsoleStringFormatter(metaclass=ABCMeta):
 class WarningFormatter(BaseConsoleStringFormatter):
     def format(self, string):
         return Fore.WHITE + Back.RED + string + Fore.RESET + Back.RESET
+
+class HeaderFormatter(BaseConsoleStringFormatter):
+    def format(self, string):
+        return Fore.BLUE + Back.BLACK + Style.BRIGHT + string + Fore.RESET + Back.RESET + Style.RESET_ALL

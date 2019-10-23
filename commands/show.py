@@ -20,28 +20,28 @@ class ShowCommand(Command):
 
         self.show_permission = args.perm      
         self.show_signature = args.sign
-        self.show_components = args.comp 
+        self.components = args.comp 
 
     def execute(self):
         
         a = apk.APK(self.apkFile)
         
         if self.show_permission:
-            self.display_permissions(a)
+            self.show_permissions(a)
         elif self.show_signature:
-            self.display_sign(a)
-        elif self.show_components:
-            self.display_components(a)
+            self.show_sign(a)
+        elif self.components:
+            self.show_components(a)
         else:
-            self.display_basic(a)
+            self.show_basic(a)
 
-    def display_permissions(self, a):
+    def show_permissions(self, a):
         permissions = a.get_permissions()
         permissions.sort()
         # print(type(permissions))
         display_permissions(permissions)
 
-    def display_basic(self, a):
+    def show_basic(self, a):
         appname = a.get_app_name()
         package = a.get_package()
         ver_code = a.get_androidversion_code()
@@ -70,7 +70,7 @@ class ShowCommand(Command):
         display_tabulated(data)    
 
     # Display signing details
-    def display_sign(self, a):
+    def show_sign(self, a):
         signature = Signature(a)
         data = []
         data.append(['File', self.apkFile])
@@ -117,7 +117,7 @@ class ShowCommand(Command):
             data.append(['Hash Algorithm', key.hash_algo])
         display_tabulated(data)
 
-    def display_components(self, a):
+    def show_components(self, a):
         data = []
         comp = components.Components(a)
         activities = comp.activities
@@ -143,7 +143,7 @@ class ShowCommand(Command):
                     key = ''
         display_tabulated(data)
 
-    def display_activities(self):
+    def show_activities(self):
         pass
 
     def beautify_api_level(self, version):
